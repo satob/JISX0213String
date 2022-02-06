@@ -179,8 +179,11 @@ public class JISX0213StringTest {
         assertEquals(JISX0213String.length("か゚"), 1);
 
         // JIS X 0213 JIS第3水準非漢字 合字 1文字目と2文字目が逆でもよいもの
+        // BreakIteratorを使うだけだと5文字とカウントされる
         assertEquals(JISX0213String.length("˩˥ ˥˩"), 3);
+        // BreakIteratorを使うだけだと4文字とカウントされる
         assertEquals(JISX0213String.length("˩˥˥˩"), 2);
+        // BreakIteratorを使うだけだと4文字とカウントされる
         assertEquals(JISX0213String.length("˥˩˩˥"), 2);
         assertEquals(JISX0213String.length("˥ ˩ ˥"), 5);
 
@@ -194,5 +197,17 @@ public class JISX0213StringTest {
         assertEquals(JISX0213String.length("𩸽"), 1);
     }
 
+    // O(n^2)とかになっていないかの確認
+    @Test
+    void testLengthPerformance() {
+        long startTime = System.currentTimeMillis();
+        StringBuilder sb = new StringBuilder();
+        for (int i=0; i<Short.MAX_VALUE; i++) {
+            sb.append("˩˥");
+        }
+        JISX0213String.length(sb.toString());
+        long endTime = System.currentTimeMillis();
+        assertTrue(endTime - startTime < 1000);
+    }
 }
 
