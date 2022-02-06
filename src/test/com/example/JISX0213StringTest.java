@@ -2,19 +2,9 @@ package com.example;
 
 import static org.junit.Assert.*;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class JISX0213StringTest {
-
-    @BeforeAll
-    static void recordInitialMemoryConsumption() {
-    }
-
-    @AfterAll
-    static void measureWholeMemoryConsumption() {
-    }
 
     @Test
     void testValidCharacters() {
@@ -36,11 +26,14 @@ public class JISX0213StringTest {
         // JIS X 0208 JIS第2水準漢字
         assertTrue(JISX0213String.isValid("弌"));
 
-        // JIS X 0213 JIS第3水準非漢字 1コードユニット
+        // JIS X 0213 JIS第3水準非漢字 1コードユニット(ǽ)
+        assertTrue(JISX0213String.isValid("\u01fd"));
         assertTrue(JISX0213String.isValid("ǽ"));
-        // JIS X 0213 JIS第3水準非漢字 合字 1文字目も2文字目もvalid
+        // JIS X 0213 JIS第3水準非漢字 合字 1文字目も2文字目もvalid（æ̀）
+        assertTrue(JISX0213String.isValid("\u00e6\u0300"));
         assertTrue(JISX0213String.isValid("æ̀"));
-        // JIS X 0213 JIS第3水準非漢字 合字 2文字目だけだとinvalidのもの
+        // JIS X 0213 JIS第3水準非漢字 合字 2文字目だけだとinvalidのもの(か゚)
+        assertTrue(JISX0213String.isValid("\u304b\u309a"));
         assertTrue(JISX0213String.isValid("か゚"));
 
         // JIS X 0213 JIS第3水準非漢字 合字 1文字目と2文字目が逆でもよいもの
@@ -150,9 +143,56 @@ public class JISX0213StringTest {
 
     // 複数文字のテスト
     @Test
-    void testMixedString() {
+    void testMixedStringValidation() {
         assertTrue(JISX0213String.isValid("俱𠀋丂𩸽"));
         assertFalse(JISX0213String.isValid("繁体字简体字"));
     }
+
+    @Test
+    void testLength() {
+        // 空文字
+        assertEquals(JISX0213String.length(""), 0);
+
+        // ASCII
+        assertEquals(JISX0213String.length("A"), 1);
+        // JIS X 0201 半角カナ
+        assertEquals(JISX0213String.length("｢ｱｲｳ｣"), 5);
+
+        // JIS X 0208 非漢字
+        assertEquals(JISX0213String.length("あ"), 1);
+        // JIS X 0208 非漢字 Windows-31JとShift_JISでマッピングが異なるもの
+        assertEquals(JISX0213String.length("～―￠￡￢"), 5);
+
+        // JIS X 0208 JIS第1水準漢字
+        assertEquals(JISX0213String.length("亜"), 1);
+        // JIS X 0208 JIS第2水準漢字
+        assertEquals(JISX0213String.length("弌"), 1);
+
+        // JIS X 0213 JIS第3水準非漢字 1コードユニット(ǽ)
+        assertEquals(JISX0213String.length("\u01fd"), 1);
+        assertEquals(JISX0213String.length("ǽ"), 1);
+        // JIS X 0213 JIS第3水準非漢字 合字 1文字目も2文字目もvalid（æ̀）
+        assertEquals(JISX0213String.length("\u00e6\u0300"), 1);
+        assertEquals(JISX0213String.length("æ̀"), 1);
+        // JIS X 0213 JIS第3水準非漢字 合字 2文字目だけだとinvalidのもの(か゚)
+        assertEquals(JISX0213String.length("\u304b\u309a"), 1);
+        assertEquals(JISX0213String.length("か゚"), 1);
+
+        // JIS X 0213 JIS第3水準非漢字 合字 1文字目と2文字目が逆でもよいもの
+        assertEquals(JISX0213String.length("˩˥ ˥˩"), 3);
+        assertEquals(JISX0213String.length("˩˥˥˩"), 2);
+        assertEquals(JISX0213String.length("˥˩˩˥"), 2);
+        assertEquals(JISX0213String.length("˥ ˩ ˥"), 5);
+
+        // JIS X 0213 JIS第3水準漢字 1コードユニット
+        assertEquals(JISX0213String.length("俱"), 1);
+        // JIS X 0213 JIS第3水準漢字 サロゲートペア
+        assertEquals(JISX0213String.length("𠀋"), 1);
+        // JIS X 0213 JIS第4水準漢字 1コードユニット
+        assertEquals(JISX0213String.length("丂"), 1);
+        // JIS X 0213 JIS第4水準漢字 サロゲートペア
+        assertEquals(JISX0213String.length("𩸽"), 1);
+    }
+
 }
 

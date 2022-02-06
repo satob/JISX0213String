@@ -296,8 +296,10 @@ public class JISX0212CharactersInJISX0213Test {
 $JISX0212JISX0213MS932Map | ForEach-Object {
     if ($_.ToCharArray().length -eq 1) {
         ('        assertTrue(JISX0213String.isValid("\u{0:X}"));' -F [int]($_.ToCharArray()[0])) + "`t// $_"
+        ('        assertEquals(JISX0213String.length("\u{0:X}"), 1);' -F [int]($_.ToCharArray()[0]))
     } elseif ($_.ToCharArray().length -eq 2) {
         ('        assertTrue(JISX0213String.isValid("\u{0:X}\u{1:X}"));' -F [int]($_.ToCharArray()[0]), [int]($_.ToCharArray()[1])) + "`t// $_"
+        ('        assertEquals(JISX0213String.length("\u{0:X}\u{1:X}"), 1);' -F [int]($_.ToCharArray()[0]), [int]($_.ToCharArray()[1]))
     }
 }
     @'
@@ -312,8 +314,10 @@ $JISX0212JISX0213MS932Map | ForEach-Object {
 $JISX0212JISX0213NonMS932Map | ForEach-Object {
     if ($_.ToCharArray().length -eq 1) {
         ('        assertTrue(JISX0213String.isValid("\u{0:X}"));' -F [int]($_.ToCharArray()[0])) + "`t// $_"
+        ('        assertEquals(JISX0213String.length("\u{0:X}"), 1);' -F [int]($_.ToCharArray()[0]))
     } elseif ($_.ToCharArray().length -eq 2) {
         ('        assertTrue(JISX0213String.isValid("\u{0:X}\u{1:X}"));' -F [int]($_.ToCharArray()[0]), [int]($_.ToCharArray()[1])) + "`t// $_"
+        ('        assertEquals(JISX0213String.length("\u{0:X}\u{1:X}"), 1);' -F [int]($_.ToCharArray()[0]), [int]($_.ToCharArray()[1]))
     }
 }
     @'
@@ -328,8 +332,10 @@ $JISX0212JISX0213NonMS932Map | ForEach-Object {
 $JISX0212NonJISX0213MS932Map | ForEach-Object {
     if ($_.ToCharArray().length -eq 1) {
         ('        assertTrue(JISX0213String.isValid("\u{0:X}"));' -F [int]($_.ToCharArray()[0])) + "`t// $_"
+        ('        assertEquals(JISX0213String.length("\u{0:X}"), 1);' -F [int]($_.ToCharArray()[0]))
     } elseif ($_.ToCharArray().length -eq 2) {
         ('        assertTrue(JISX0213String.isValid("\u{0:X}\u{1:X}"));' -F [int]($_.ToCharArray()[0]), [int]($_.ToCharArray()[1])) + "`t// $_"
+        ('        assertEquals(JISX0213String.length("\u{0:X}\u{1:X}"), 1);' -F [int]($_.ToCharArray()[0]), [int]($_.ToCharArray()[1]))
     }
 }
     @'
@@ -344,8 +350,10 @@ $JISX0212NonJISX0213MS932Map | ForEach-Object {
 $JISX0212NonJISX0213NonMS932Map | ForEach-Object {
     if ($_.ToCharArray().length -eq 1) {
         ('        assertFalse(JISX0213String.isValid("\u{0:X}"));' -F [int]($_.ToCharArray()[0])) + "`t// $_"
+        ('        assertEquals(JISX0213String.length("\u{0:X}"), 1);' -F [int]($_.ToCharArray()[0]))
     } elseif ($_.ToCharArray().length -eq 2) {
         ('        assertFalse(JISX0213String.isValid("\u{0:X}\u{1:X}"));' -F [int]($_.ToCharArray()[0]), [int]($_.ToCharArray()[1])) + "`t// $_"
+        ('        assertEquals(JISX0213String.length("\u{0:X}\u{1:X}"), 1);' -F [int]($_.ToCharArray()[0]), [int]($_.ToCharArray()[1]))
     }
 }
     @'

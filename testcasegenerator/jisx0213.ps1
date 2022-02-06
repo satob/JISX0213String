@@ -66,21 +66,26 @@ Get-Content .\jisx0213-2004-8bit-std.txt |
                 # 1コードポイント、基本面の文字の場合
                 $Character = [System.Activator]::CreateInstance([System.String], [char[]]@([int]("0x" + $CodeUnits[0])))
                 if ($Character -eq '\') {
-                    ('        assertTrue(JISX0213String.isValid("\\"));' -F $CodeUnits[0]) + "`t`t// 0x${JIS}, ${Character}"
+                    ('        assertTrue(JISX0213String.isValid("\\"));') + "`t`t`t// 0x${JIS}, ${Character}"
+                    ('        assertEquals(JISX0213String.length("\\"), 1);')
                 } elseif ($Character -eq '"') {
-                    ('        assertTrue(JISX0213String.isValid("\""));' -F $CodeUnits[0]) + "`t`t// 0x${JIS}, ${Character}"
+                    ('        assertTrue(JISX0213String.isValid("\""));') + "`t`t`t// 0x${JIS}, ${Character}"
+                    ('        assertEquals(JISX0213String.length("\""), 1);')
                 } else {
                     ('        assertTrue(JISX0213String.isValid("\u{0}"));' -F $CodeUnits[0]) + "`t`t// 0x${JIS}, ${Character}"
+                    ('        assertEquals(JISX0213String.length("\u{0:X}"), 1);' -F $CodeUnits[0])
                 }
             } else {
                 # 1コードポイント、基本面でない場合
                 $Character = [char]::ConvertFromUtf32([int]("0x" + $CodeUnits[0]))
                 ('        assertTrue(JISX0213String.isValid("\u{0:X}\u{1:X}"));' -F [int]($Character.ToCharArray()[0]), [int]($Character.ToCharArray()[1])) + "`t// 0x${JIS}, ${Character}"
+                ('        assertEquals(JISX0213String.length("\u{0:X}\u{1:X}"), 1);' -F [int]($Character.ToCharArray()[0]), [int]($Character.ToCharArray()[1]))
             }
         } else {
             # 2コードポイント、合字の場合
             $Character = [System.Activator]::CreateInstance([System.String], [char[]]@([int]("0x" + $CodeUnits[0]), [int]("0x" + $CodeUnits[1])))
             ('        assertTrue(JISX0213String.isValid("\u{0}\u{1}"));' -F $CodeUnits[0], $CodeUnits[1]) + "`t// 0x${JIS}, ${Character}"
+            ('        assertEquals(JISX0213String.length("\u{0}\u{1}"), 1);' -F $CodeUnits[0], $CodeUnits[1])
         }
   }
 
