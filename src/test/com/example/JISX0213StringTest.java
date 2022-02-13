@@ -47,6 +47,9 @@ public class JISX0213StringTest {
         // JIS X 0213 JIS第3水準非漢字 合字 1文字目も2文字目もvalid（æ̀）
         assertTrue(JISX0213String.isValid("\u00e6\u0300"));
         assertTrue(JISX0213String.isValid("æ̀"));
+        assertTrue(JISX0213String.isValid("\u00e6"));
+        assertTrue(JISX0213String.isValid("\u0300"));
+
         // JIS X 0213 JIS第3水準非漢字 合字 2文字目だけだとinvalidのもの(か゚)
         assertTrue(JISX0213String.isValid("\u304b\u309a"));
         assertTrue(JISX0213String.isValid("か゚"));
@@ -191,6 +194,8 @@ public class JISX0213StringTest {
         // JIS X 0213 JIS第3水準非漢字 合字 1文字目も2文字目もvalid（æ̀）
         assertEquals(JISX0213String.length("\u00e6\u0300"), 1);
         assertEquals(JISX0213String.length("æ̀"), 1);
+        assertEquals(JISX0213String.length("\u00e6"), 1);
+        assertEquals(JISX0213String.length("\u0300"), 1);
         // JIS X 0213 JIS第3水準非漢字 合字 2文字目だけだとinvalidのもの(か゚)
         assertEquals(JISX0213String.length("\u304b\u309a"), 1);
         assertEquals(JISX0213String.length("か゚"), 1);
